@@ -22,3 +22,15 @@ En el archivo package.json debemos agregar:
 "proxy": "http://localhost:3001/user"
 ```
 el cual hace un llamado a la database de Mongo a la coleccion `user`
+
+**Nota:**
+
+si sale el Warning
+    (6:29521) autoprefixer: Replace color-adjust to print-color-adjust.
+add it into package.json
+
+```
+  "overrides": {
+    "autoprefixer": "10.4.5"
+  },
+```
