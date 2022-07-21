@@ -27,14 +27,19 @@ router.post('/signup', (req, res, next) => {
                 } else{
                     const user = new User({
                         _id: new mongoose.Types.ObjectId(),
+                        name: req.body.name,
                         email: req.body.email,
+                        pic: req.body.pic, // si picture se deja vacia igual funciona porque en el schema le estamos apsando un valor por default
                         password: hash
                     })
                     user
                     .save()
                     .then(result => {
                         res.status(201).json({
-                            message: 'User created'
+                            // Este es el mensaje que sale en consola y en insomnia
+                            message: 'User created',
+                            data: user
+
                         })
                     })
                     .catch(err => {
