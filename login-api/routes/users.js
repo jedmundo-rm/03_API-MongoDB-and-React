@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+const generateToken = require("../middleware/generateToken")
 const User = require('../models/user')
 
 router.post('/signup', (req, res, next) => {
@@ -29,7 +30,7 @@ router.post('/signup', (req, res, next) => {
                         _id: new mongoose.Types.ObjectId(),
                         name: req.body.name,
                         email: req.body.email,
-                        pic: req.body.pic, // si picture se deja vacia igual funciona porque en el schema le estamos apsando un valor por default
+                        pic: req.body.pic, // si ponemos esto entonces en el formulario es obligatorio poner una imagen
                         password: hash
                     })
                     user
@@ -39,7 +40,6 @@ router.post('/signup', (req, res, next) => {
                             // Este es el mensaje que sale en consola y en insomnia
                             message: 'User created',
                             data: user
-
                         })
                     })
                     .catch(err => {
@@ -73,9 +73,13 @@ router.post('/login', (req, res, next) => {
             }
             if (result){
                 const token = jwt.sign(
-                    {
+                    { 
+                        userId: user[0]._id,
+                        name: user[0].name,
                         email: user[0].email,
-                        userId: user[0]._id
+                        isAdmin: user[0].isAdmin,
+                        pic: user[0].pic, 
+                        token: generateToken(user._id)
                     }, 
                     process.env.JWT_KEY,
                     {
